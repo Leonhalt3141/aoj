@@ -2,7 +2,7 @@
 import java.util.Scanner
 import scala.math.pow
 
-object TP1_1_B {
+object ITP1_1_B {
   def main(args: Array[String]): Unit = {
     val sc = new Scanner(System.in)
     val x = sc.nextInt()
