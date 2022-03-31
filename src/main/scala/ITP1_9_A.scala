@@ -20,7 +20,5 @@ object ITP1_9_A {
     }
 
     println(count)
-    val n = "a"
-    n.toInt
   }
 }
