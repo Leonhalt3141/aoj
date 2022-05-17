@@ -1,87 +1,58 @@
 
-import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 import scala.io.StdIn
 
 object ALDS1_3_C {
 
+  case class LinkNode(value: Int) {
+    var prev: LinkNode = _
+    var next: LinkNode = _
+  }
+
   class LinkedList {
 
-    case class LinkNode(v: Int) {
-      val value: Int = v
-      var prev: LinkNode = _
-      var next: LinkNode = _
-    }
+    var first = new LinkNode(-1)
+    var last = new LinkNode(-1)
 
-    var head: LinkNode = _
-    var tail: LinkNode = _
+    first.next = last
+    first.next.prev = first
 
     def insert(x: Int): Unit = {
       val newNode = new LinkNode(x)
-      if (head == null) {
-        tail = newNode
-      } else {
-        head.prev = newNode
-      }
-      newNode.next = head
-      head = newNode
+      newNode.next = first.next
+      if (first.next != null) first.next.prev = newNode
+      first.next = newNode
+      newNode.prev = first
     }
 
-    def search(x: Int): (LinkNode, LinkNode) = {
-      var current = head
-      var prev: LinkNode = null
-      while (current != null) {
-        if (current.value == x) {
-          return (prev, current)
-        }
-        prev = current
-        current = current.next
+    def search(x: Int): LinkNode = {
+      var node = first.next
+      while (node != last && node.value != x) {
+        node = node.next
       }
-      (null, null)
+      node
     }
 
-    def delete(x: Int): Unit = {
-      val (prev, found) = search(x)
-      if (found == head) {
-        deleteFirst()
-      } else if (found == tail) {
-        deleteLast()
-      } else if (found != null) {
-        prev.next = found.next
-        if (found.next != null) {
-          found.next.prev = prev
-        }
+    def delete(node: LinkNode): Unit = {
+      if (node != last) {
+        node.prev.next = node.next
+        node.next.prev = node.prev
       }
     }
 
-    def deleteLast(): Unit = {
-      if (head == tail) {
-        head = null
-        tail = null
-      } else {
-        tail.prev.next = null
-        tail = tail.prev
-      }
-    }
-
-    def deleteFirst(): Unit = {
-      if (head == tail) {
-        head = null
-        tail = null
-      } else {
-        head.next.prev = null
-        head = head.next
-      }
-    }
+    def delete(x: Int): Unit = delete(search(x))
+    def deleteFirst(): Unit = delete(first.next)
+    def deleteLast(): Unit = delete(last.prev)
 
     def printStr(): Unit = {
-      var current = head
-      val sb = new mutable.StringBuilder().append(current.value)
-      current = current.next
-      while (current != null) {
-        sb.append(" ").append(current.value)
-        current = current.next
+      val b = ArrayBuffer[Int]()
+      var node = first.next
+
+      while (node != last) {
+        b += node.value
+        node = node.next
       }
-      println(sb)
+      println(b.mkString(" "))
     }
   }
 
